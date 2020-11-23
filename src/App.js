@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
+const apiKey = "dcf40aa8-9b14-488c-b444-7e43ab403ca0";
+const url = "https://api.thecatapi.com/v1/images/search";
 function App() {
+  const [catUrl, setCatUrl] = useState("testing");
+
+  useEffect(() => {
+    getCat();
+  }, []);
+
+  const getCat = () => {
+    fetch(url, {
+      "x-api-key": apiKey,
+    })
+      .then((res) => res.json())
+      .then((cats) => {
+        const catURL = cats[0].url;
+        setCatUrl(catURL);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Random Cats</h1>
+      <img src={catUrl} alt="" />
+      <button onClick={getCat}>Get a new cat picture</button>
     </div>
   );
 }
